@@ -533,7 +533,7 @@ exif data to test if the php will run.
 
 The filename will look something like cat-L15t3Nr.jpg.php
 
-![[cat.jpeg)
+![](cat.jpeg)
 
 The payload:
 
