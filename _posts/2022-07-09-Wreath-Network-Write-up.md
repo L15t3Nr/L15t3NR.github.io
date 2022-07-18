@@ -8,6 +8,8 @@ img_path: /assets/img/wreath-writeup/
 ---
 
 ![wreth-network](wreath-network.png)
+
+
 The Wreath Network can be found [here](https://tryhackme.com/room/wreath)
 
 # Executive Summary
@@ -69,9 +71,13 @@ os.system("curl -k {} -d '{}' -H '{}'".format(url,payload,header))
 Using this functionality, the private SSH key can be found in
 **/root/.ssh/id_rsa**
 
+
 ![exploit](id_rsa.png)
+
+
 The private key provides access to the production server as **root** via
 SSH.
+
 
 ![ssh](ssh.png)
 
