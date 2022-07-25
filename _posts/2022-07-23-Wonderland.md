@@ -9,6 +9,8 @@ img_path: /assets/img/Wonderland/
 
 Wonderland can be found [here](https://tryhackme.com/room/wonderland)
 
+![Wonderland](Wonderland.jpeg)
+
 # Enumeration
 ## Nmap
 The results of nmap
