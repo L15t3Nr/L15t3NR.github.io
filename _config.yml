@@ -23,7 +23,7 @@ timezone:
 
 title: L15t3Nr                          # the main title
 
-tagline:    # it will display as the sub-title
+tagline: InfoSec Acolyte    # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
   I am L15t3Nr, a seeker of arcane knowledge in the eldritch realms of cyberspace.
