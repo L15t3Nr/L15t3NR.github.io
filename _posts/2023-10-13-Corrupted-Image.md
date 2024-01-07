@@ -57,7 +57,9 @@ BUT...if you are an intellectually starving nerd like myself, you might push on 
 # Image File Directory (IDF) Searching for GPS Data
 
 **Byte Order and IFD Offset**
+
 The TIFF Header Structure is 8 bytes long. 
+
 
 ![8-byte-tiff.png](8-byte-tiff.png)
 
@@ -69,6 +71,7 @@ The TIFF Header Structure is 8 bytes long.
 | 4 to 7 | `00 00 00 08` | Offset of the first IFD |
 
 **Image File Directory**
+
 This is where the image data pointers and metadata are stored. This directory could come before or after the actual image data itself. 
 
 In this case, the IFD0 is located at offset 8. This is heavily confusing because we just looked at offsets 12 to 19 to see the 8 byte TIFF Header Structure. What this offset 8 byte value actually means is to start from the beginning of the TIFF File. The TIFF file began at offset 12 with a value of `4D`. We need to add 8 bytes starting from offset 12 and look at the next bytes to see the first IFD entry. 
@@ -102,6 +105,7 @@ To put it another way, we can add 12 bytes from the very beginning of the file.
 The first 2 bytes tell us that there are 13 12-byte entries that follow. Then the next IFD is pointed to at the end.  
 
 **12-Byte Field Entry 0 Breakdown**
+
 The first 12 bytes are broken down as follows:
 
 
@@ -119,7 +123,7 @@ Bytes 8 to 11 don't actually point to an IFD value offset. Rather, the value of 
 
 ![Exif](img-5.png)
 
-The 12 byte field entries contain the metadata we want to view. In this first directory entry we looked at the Exif.Image.ImageWidth data. Using an Exif tags table as a reference, we can look for the directory entry that has a GPS Info.
+The 12 byte field entries contain the metadata we want to view. In this first directory entry we looked at the Exif.Image.ImageWidth data. Using an Exif tags table as a reference, we can look for the directory entry that has GPS Info.
 
 **GPS Info Tag**
 
@@ -187,7 +191,7 @@ The second value is `00 00 00 3A` (58), followed by the second LONG `00 00 00 01
 The third value is a LONG `00 02 01 E3 `(131555) and the second LONG `00 00 27 10` (10000)
 After dividing 131555 by 10000 you have 13.1555. 
 
-The 3 RATIONAL values are in an Degrees, Minutes, Seconds format. 
+The 3 RATIONAL values are in a Degrees, Minutes, Seconds format. 
 `42° 58' 13.155"`
 
 The Final Coordinates are: 
