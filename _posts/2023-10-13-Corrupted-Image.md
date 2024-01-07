@@ -13,9 +13,9 @@ img_path: /assets/img/Corrupted Image
 
 
 
-This post is a walkthrough of how to manually recover location data from an image using a hex editor (HxD) and some **basic** math. I will provide two methods for doing this.
+This post is a walkthrough of how to manually recover location data from an image using a hex editor (HxD). I will provide two methods for doing this.
 
-I will be using an intentionally corrupted image that I created. 
+I will be using an intentionally corrupted image that I created. If you'd like to try it yourself, you can open this image in a new tab and download it, then open it in a hex editor. 
 ![Corrupted Image](Corrupted-img-2.jpg)
 
 Most of the image data has been overwritten with null values, which is why the image doesn't display anything when its opened. This is meant to simulate what might happen if the image file were deleted and partially overwritten, but without the complicated overwritten data and just null values instead. There is just enough data remaining from the original image for it to be identified as a valid image and the important EXIF data still remains in the file! All of this data can be viewed using a Hex Editor such as HxD. 
