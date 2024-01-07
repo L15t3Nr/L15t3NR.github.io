@@ -22,7 +22,7 @@ Most of the image data has been overwritten with null values, which is why the i
 
 # EXIF Tool (Simple Method)
 
-You might try taking the TXT file with the raw image data, changing the files extension from .txt to .jpg, and using an online EXIF tool to view the location data. 
+You might try taking the jpg file and using an online EXIF tool to view the location data. 
 
 ![Exif Tool](img-2.png)
 
