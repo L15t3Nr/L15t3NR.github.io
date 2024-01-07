@@ -14,8 +14,6 @@ img_path: /assets/img/Corrupted Image
 
 This post is a walkthrough of how to manually recover location data from an image using a hex editor (HxD) and some **basic** math. I will provide two methods for doing this.
 
-I've provided a text file with the image data so that you can follow along. I chose to make it a text file to prevent any loss of the EXIF data during upload/download between locations. 
-
 I will be using an intentionally corrupted image that I created. 
 ![Corrupted Image](Corrupted-img-2.jpg)
 
