@@ -10,7 +10,8 @@ tags:
 img_path: /assets/img/Corrupted Image
 ---
 ![img-1](img-1.png)
-*If you'd like to try to recover the location data yourself, now is your chance. The follow sections will provide details on how to do this. 
+
+
 
 This post is a walkthrough of how to manually recover location data from an image using a hex editor (HxD) and some **basic** math. I will provide two methods for doing this.
 
