@@ -61,10 +61,9 @@ The TIFF Header Structure is 8 bytes long.
 
 ![8-byte-tiff.png](8-byte-tiff.png)
 
-
 | Bytes | Hex Values | Meaning |
 | ---- | ---- | ---- |
-| 0 to 7 |  |  |
+| 0 to 7 | `4D 4D 00 2A 00 00 00 08` | 8-Bytes |
 | 0 to 1 | `4D 4D` | Byte Order |
 | 2 to 3 | `00 2A` | TIFF File |
 | 4 to 7 | `00 00 00 08` | Offset of the first IFD |
@@ -77,6 +76,7 @@ In this case, the IFD0 is located at offset 8. This is heavily confusing because
 To put it another way, we can add 12 bytes from the very beginning of the file. 
 
 **IFD0**
+
 
 ![IFD0](IFD0.png)
 
@@ -139,6 +139,7 @@ Looking back at the table above, the 13th directory entry contains an Exif Tag f
 | 2 to 3 | `00 04` | Field Type | LONG (4 byte unsigned integer) |
 | 4 to 7 | `00 00 00 01` | Count of the Type | 1 count |
 | 8 to 11 | `00 00 03 1E` | The Value Offset | Offset 798 |
+
 Starting from the beginning of the TIFF File, the GPS IFD should start at offset 798 and what follows is a new IFD with its own number of 12-byte entries and values.
 
 
