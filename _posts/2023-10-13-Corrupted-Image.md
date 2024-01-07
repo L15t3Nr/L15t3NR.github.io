@@ -9,8 +9,6 @@ tags:
   - WriteUp
 img_path: /assets/img/Corrupted Image
 ---
-The corrupted image can be downloaded as a text file [here](Corrupted-img-2.txt)
-
 ![img-1](img-1.png)
 *If you'd like to try to recover the location data yourself, now is your chance. The follow sections will provide details on how to do this. 
 
