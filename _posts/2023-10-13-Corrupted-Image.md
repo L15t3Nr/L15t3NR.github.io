@@ -59,7 +59,7 @@ BUT...if you are an intellectually starving nerd like myself, you might push on 
 **Byte Order and IFD Offset**
 The TIFF Header Structure is 8 bytes long. 
 
-![[8-byte-tiff.png]]
+![8-byte-tiff.png](8-byte-tiff.png)
 
 | Bytes | Hex Values | Meaning |
 | ---- | ---- | ---- |
@@ -75,7 +75,7 @@ In this case, the IFD0 is located at offset 8. This is heavily confusing because
 To put it another way, we can add 12 bytes from the very beginning of the file. 
 
 **IFD0**
-![[IFD0.png]]
+![IFD0](IFD0.png)
 
 | Bytes | Hex Value | Meaning |
 | ---- | ---- | ---- |
@@ -117,7 +117,7 @@ The 12 byte field entries contain the metadata we want to view. In this first di
 
 The GPS info tag has the hex value of `8825` and can be searched for within the 13 12-byte entries. 
 
-![[GPS-Info-Tag.png]]
+![GPS-info-tag](GPS-Info-Tag.png)
 
 Looking back at the table above, the 13th directory entry contains an Exif Tag for GPS info. 
 
@@ -132,7 +132,7 @@ Looking back at the table above, the 13th directory entry contains an Exif Tag f
 | 8 to 11 | `00 00 03 1E` | The Value Offset | Offset 798 |
 Starting from the beginning of the TIFF File, the GPS IFD should start at offset 798 and what follows is a new IFD with its own number of 12-byte entries and values.
 
-![[GPS-Info-IFD.png]]
+![GPS-Info-IFD](GPS-Info-IFD.png)
 
 Following the same IFD structure of 2-byte number of entries and then x number of 12-byte entries, we can determine what this IFD has in it. 
 
@@ -184,7 +184,7 @@ The Final Coordinates are:
 ![Exif](img-6.png)
 
 **Ta-Da**
-![[Christoph-Waltz-Ta-Da-GIF.gif]]
+![Ta-Da](Christoph-Waltz-Ta-Da-GIF.gif)
 
 These coordinates are for this address:
 ```
@@ -194,7 +194,7 @@ United States of America
 ```
 
 The original, uncorrupted image: 
-![[Original_IMG.jpg]]
+![Original](Original_IMG.jpg)
 
 
 # References:
