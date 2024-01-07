@@ -23,10 +23,10 @@ timezone:
 
 title: L15t3Nr                          # the main title
 
-tagline: InfoSec Student   # it will display as the sub-title
+tagline:    # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
-  A minimal, responsive, and powerful Jekyll theme for presenting professional writing.
+  I am L15t3Nr, a seeker of arcane knowledge in the eldritch realms of cyberspace.
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: 'https://L15t3Nr.github.io'
