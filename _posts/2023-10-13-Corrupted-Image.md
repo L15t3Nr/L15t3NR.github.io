@@ -61,12 +61,14 @@ The TIFF Header Structure is 8 bytes long.
 
 ![8-byte-tiff.png](8-byte-tiff.png)
 
+
 | Bytes | Hex Values | Meaning |
 | ---- | ---- | ---- |
 | 0 to 7 |  |  |
 | 0 to 1 | `4D 4D` | Byte Order |
 | 2 to 3 | `00 2A` | TIFF File |
 | 4 to 7 | `00 00 00 08` | Offset of the first IFD |
+
 **Image File Directory**
 This is where the image data pointers and metadata are stored. This directory could come before or after the actual image data itself. 
 
@@ -75,7 +77,9 @@ In this case, the IFD0 is located at offset 8. This is heavily confusing because
 To put it another way, we can add 12 bytes from the very beginning of the file. 
 
 **IFD0**
+
 ![IFD0](IFD0.png)
+
 
 | Bytes | Hex Value | Meaning |
 | ---- | ---- | ---- |
@@ -100,6 +104,7 @@ The first 2 bytes tell us that there are 13 12-byte entries that follow. Then th
 **12-Byte Field Entry 0 Breakdown**
 The first 12 bytes are broken down as follows:
 
+
 | Bytes | Hex Value | Meaning | Information |
 | ---- | ---- | ---- | ---- |
 | 0 to 11 | `01 00 00 03 00 00 00 01 0F C0 00 00` | IFD Entry 0 | 12-Bytes |
@@ -107,7 +112,10 @@ The first 12 bytes are broken down as follows:
 | 2 to 3 | `00 03` | Field Type | SHORT (2 byte unsigned integer) |
 | 4 to 7 | `00 00 00 01` | Count of the Type | 1 count |
 | 8 to 11 | `0F C0 00 00` | The Value Offset | 0FC0 = 4032 |
+
+
 Bytes 8 to 11 don't actually point to an IFD value offset. Rather, the value of the image width is recorded here instead since it fits in 4 bytes or less. The value is the first 4 bytes starting from the left. `0F C0` means the width is 4032 and this is confirmed by looking back at the EXIF tool results: 
+
 
 ![Exif](img-5.png)
 
@@ -116,6 +124,7 @@ The 12 byte field entries contain the metadata we want to view. In this first di
 **GPS Info Tag**
 
 The GPS info tag has the hex value of `8825` and can be searched for within the 13 12-byte entries. 
+
 
 ![GPS-info-tag](GPS-Info-Tag.png)
 
@@ -131,6 +140,7 @@ Looking back at the table above, the 13th directory entry contains an Exif Tag f
 | 4 to 7 | `00 00 00 01` | Count of the Type | 1 count |
 | 8 to 11 | `00 00 03 1E` | The Value Offset | Offset 798 |
 Starting from the beginning of the TIFF File, the GPS IFD should start at offset 798 and what follows is a new IFD with its own number of 12-byte entries and values.
+
 
 ![GPS-Info-IFD](GPS-Info-IFD.png)
 
@@ -154,10 +164,11 @@ Following the same IFD structure of 2-byte number of entries and then x number o
 
 There are 9 directory entries in this GPS Info IFD. A [GPS Info Tag](https://exiftool.org/TagNames/GPS.html) reference can be used to identify the field tags. 
 
+
 | Entry # | Field Tag | Field Type | Count | Value |
 | ---- | ---- | ---- | ---- | ---- |
 | 0 | GPSLatitudeRef | ASCII | 2 | N |
-| 1 | GPSLatitude | RATIONAL | 3 | Value at offset 0390 = 42 58 13.1555  |
+| 1 | GPSLatitude | RATIONAL | 3 | Value at offset 0390 = 42 58 13.1555 |
 | 2 | GPSLongitudeRef | ASCII | 2 | W |
 | 3 | GPSLongitude | RATIONAL | 3 | Value at offset 03A8 = 85 40 13.7531 |
 | 4 | GPSAltitudeRef | BYTE | 1 | 0 = Above Sea Level |
@@ -165,6 +176,7 @@ There are 9 directory entries in this GPS Info IFD. A [GPS Info Tag](https://exi
 | 6 | GPSTimeStamp | RATIONAL | 3 | Value at offset 03C8 =  23:28:24 UTC |
 | 7 | GPSProcessingMethod | UNDEFINED | 12 | Skip |
 | 8 | GPSDateStamp | ASCII | 11 | Value at offset 03EC = 2023:09:27 |
+
 Each RATIONAL Field Type consists of 2 LONGs. The first LONG is the numerator and the second LONG is the denominator. I converted the hex values to their decimal value and divided. 
 
 As an example, Entry 1 contains 3 RATIONAL values. 
@@ -183,7 +195,9 @@ The Final Coordinates are:
 
 ![Exif](img-6.png)
 
+
 **Ta-Da**
+
 ![Ta-Da](Christoph-Waltz-Ta-Da-GIF.gif)
 
 These coordinates are for this address:
@@ -192,6 +206,7 @@ United States District Court for the Western District of Michigan
 110 Michigan Street Northwest, Grand Rapids, MI 49503 
 United States of America
 ```
+
 
 The original, uncorrupted image: 
 ![Original](Original_IMG.jpg)
