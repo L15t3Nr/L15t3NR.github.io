@@ -7,9 +7,9 @@ tag: [TryHackMe, WriteUp, Wonderland]
 img_path: /assets/img/Wonderland/
 ---
 
-Wonderland can be found [here](https://tryhackme.com/room/wonderland)
+Wonderland can be found [here](/assets/img/Wonderland/https://tryhackme.com/room/wonderland)
 
-![Wonderland](Wonderland.jpeg)
+![Wonderland](/assets/img/Wonderland/Wonderland.jpeg)
 
 # Enumeration
 ## Nmap
@@ -35,7 +35,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ## Manual Inspection 
 The home page contains only an image
 
-![Home](Home.png)
+![Home](/assets/img/Wonderland/Home.png)
 
 ## Fuzzing for Directories
 Using Wfuzz, I enumerate directories
@@ -45,29 +45,29 @@ wfuzz -c -z file,/opt/SecLists/Discovery/Web-Content/raft-large-directories.txt 
 
 One of the first results comes back as the '/r/' directory.
 
-![r](r.png)
+![r](/assets/img/Wonderland/r.png)
 
 I had a feeling this was going to spell out the word 'rabbit', so I checked. 
 
-![rabbitPage](rabbitPage.png)
+![rabbitPage](/assets/img/Wonderland/rabbitPage.png)
 
 There is a page here and checking the source reveals something interesting. 
 
 There are credentials hidden in the page source. 
 
-![sourceCredentials](sourceCredentials.png)
+![sourceCredentials](/assets/img/Wonderland/sourceCredentials.png)
 
 # Lateral Movement
 ### Alice
 
 The credentials i found grant SSH access as the user 'alice'.
 
-![SSHAlice](SSHAlice.png)
+![SSHAlice](/assets/img/Wonderland/SSHAlice.png)
 
 Digging into the users permissions reveals the ability to execute a python script as the user 'rabbit'
 
 `sudo -l`
-![sudo-l](sudo-l.png)
+![sudo-l](/assets/img/Wonderland/sudo-l.png)
 
 
 ### Rabbit
@@ -90,55 +90,55 @@ Setting up a netcat listener on 4242 and then executing the script as the user r
 
 `sudo -u rabbit python3.6 ~/walrus_and_the_carpenter.py`
 
-![randomPY](randomPY.png)
+![randomPY](/assets/img/Wonderland/randomPY.png)
 
-![rabbitShell](rabbitShell.png)
+![rabbitShell](/assets/img/Wonderland/rabbitShell.png)
 
 ### Hatter
 
 The rabbit user contains a binary called 'teaParty' and their is a SUID set on the binary.
 
-![SUID](SUID2.png)
+![SUID](/assets/img/Wonderland/SUID2.png)
 
 I downloaded a strings static binary onto the target and inspected the strings in the binary.
 
-![teaParty](teaParty.png)
+![teaParty](/assets/img/Wonderland/teaParty.png)
 
 This revealed that the binary uses the 'date' command without an absolute path. This way I can hijack the command with my own by added a malicious 'date' binary to the tmp directory and including the tmp directory in the path. 
 
-![stringsResults](stringsResults.png)
+![stringsResults](/assets/img/Wonderland/stringsResults.png)
 
 the malicious date binary will contain a reverse shell payload and then be made executable
 
-![newDate](newDate.png)
+![newDate](/assets/img/Wonderland/newDate.png)
 
 The tmp directory is also added to the path
 
-![PATH](PATH.png)
+![PATH](/assets/img/Wonderland/PATH.png)
 
 A netcat listener is started on port 2345 and then the binary is executed for a reverse shell as the user Hatter
 
-![TeaPartyExec](TeaPartyExec.png)
+![TeaPartyExec](/assets/img/Wonderland/TeaPartyExec.png)
 
-![HatterShell](HatterShell.png)
+![HatterShell](/assets/img/Wonderland/HatterShell.png)
 
 # Privilege Escalation
 ### Root
 User hatter contains a password file in the home directory that I will use to login via SSH
 
-![HatterPassword](HatterPassword.png)
+![HatterPassword](/assets/img/Wonderland/HatterPassword.png)
 
-![HatterSSH](HatterSSH.png)
+![HatterSSH](/assets/img/Wonderland/HatterSSH.png)
 
-I ran through the [Privilege Escalation Checklist](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md) and found that the hatter user has capabilities set on Perl. 
+I ran through the [Privilege Escalation Checklist](/assets/img/Wonderland/https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md) and found that the hatter user has capabilities set on Perl. 
 
-![GetCap](GetCap.png)
+![GetCap](/assets/img/Wonderland/GetCap.png)
 
-There is a privilege escalation path found on [GTFO bins](https://gtfobins.github.io/gtfobins/perl/)
+There is a privilege escalation path found on [GTFO bins](/assets/img/Wonderland/https://gtfobins.github.io/gtfobins/perl/)
 
 The payload: 
 ```
 perl -e 'use POSIX qw(setuid); POSIX::setuid(0); exec "/bin/sh";'
 ```
 
-![root](rootWonderland.png)
+![root](/assets/img/Wonderland/rootWonderland.png)

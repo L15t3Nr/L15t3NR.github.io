@@ -9,14 +9,14 @@ tags:
   - WriteUp
 img_path: /assets/img/Corrupted Image
 ---
-![img-1](img-1.png)
+![img-1](/assets/img/Corrupted-Image/img-1.png)
 
 
 
 This post is a walkthrough of how to manually recover location data from an image using a hex editor (HxD). I will provide two methods for doing this.
 
 I will be using an intentionally corrupted image that I created. If you'd like to try it yourself, you can open this image in a new tab and download it, then open it in a hex editor. 
-![Corrupted Image](Corrupted-img-2.jpg)
+![Corrupted Image](/assets/img/Corrupted-Image/Corrupted-img-2.jpg)
 
 Most of the image data has been overwritten with null values, which is why the image doesn't display anything when its opened. This is meant to simulate what might happen if the image file were deleted and partially overwritten, but without the complicated overwritten data and just null values instead. There is just enough data remaining from the original image for it to be identified as a valid image and the important EXIF data still remains in the file! All of this data can be viewed using a Hex Editor such as HxD. 
 
@@ -24,11 +24,11 @@ Most of the image data has been overwritten with null values, which is why the i
 
 You might try taking the jpg file and using an online EXIF tool to view the location data. 
 
-![Exif Tool](img-2.png)
+![Exif Tool](/assets/img/Corrupted-Image/img-2.png)
 
-Unfortunately, this won't return any of the useful EXIF information. This has to do with the TIFF Header Structure of this corrupted image. TIFF stands for Tag Image File Format and its used to represent [raster graphics](https://en.wikipedia.org/wiki/Raster_graphics)(2-D Images as a grid of pixels) and store image information (like location data or created date). 
+Unfortunately, this won't return any of the useful EXIF information. This has to do with the TIFF Header Structure of this corrupted image. TIFF stands for Tag Image File Format and its used to represent [raster graphics](/assets/img/Corrupted-Image/https://en.wikipedia.org/wiki/Raster_graphics)(2-D Images as a grid of pixels) and store image information (like location data or created date). 
 
-![HxD](img-3.png)
+![HxD](/assets/img/Corrupted-Image/img-3.png)
 
 When looking at a JPG in a hex editor, the first few offsets of the file contain some important information for the EXIF tool to identify the image and the metadata it has. 
 
@@ -42,15 +42,15 @@ Offset `12` is where the fun begins and leads towards the first solution of this
 
 The start of the TIFF Header Structure can begin with either `4D 4D` (MM in ascii) or `49 49` (II in ascii). Here, there is a `4D` for an M, but only just one. If you are clever and realize there should be two M's, you might change the null value at offset `13` to `4D`, save the change and reupload the image to an EXIF Tool. 
 
-![Changed](img-4.png)
+![Changed](/assets/img/Corrupted-Image/img-4.png)
 
-![Exif](img-5.png)
+![Exif](/assets/img/Corrupted-Image/img-5.png)
 
-![Exif](img-6.png)
+![Exif](/assets/img/Corrupted-Image/img-6.png)
 
 With this simple change the exiftool has everything it needs to identify all the IFD entries, including the location data. 
 
-![Well Done](well-done.gif)
+![Well Done](/assets/img/Corrupted-Image/well-done.gif)
 
 BUT...if you are an intellectually starving nerd like myself, you might push on to understand where this data actually lives in the file. Why? Because why not? You can't just leave knowledge on the table. 
 
@@ -61,7 +61,7 @@ BUT...if you are an intellectually starving nerd like myself, you might push on 
 The TIFF Header Structure is 8 bytes long. 
 
 
-![8-byte-tiff.png](8-byte-tiff.png)
+![8-byte-tiff.png](/assets/img/Corrupted-Image/8-byte-tiff.png)
 
 | Bytes | Hex Values | Meaning |
 | ---- | ---- | ---- |
@@ -81,7 +81,7 @@ To put it another way, we can add 12 bytes from the very beginning of the file.
 **IFD0**
 
 
-![IFD0](IFD0.png)
+![IFD0](/assets/img/Corrupted-Image/IFD0.png)
 
 
 | Bytes | Hex Value | Meaning |
@@ -112,7 +112,7 @@ The first 12 bytes are broken down as follows:
 | Bytes | Hex Value | Meaning | Information |
 | ---- | ---- | ---- | ---- |
 | 0 to 11 | `01 00 00 03 00 00 00 01 0F C0 00 00` | IFD Entry 0 | 12-Bytes |
-| 0 to 1 | `01 00` | Field Identifying Tag | 256 = [Exif.Image.ImageWidth](https://exiftool.org/TagNames/EXIF.html) |
+| 0 to 1 | `01 00` | Field Identifying Tag | 256 = [Exif.Image.ImageWidth](/assets/img/Corrupted-Image/https://exiftool.org/TagNames/EXIF.html) |
 | 2 to 3 | `00 03` | Field Type | SHORT (2 byte unsigned integer) |
 | 4 to 7 | `00 00 00 01` | Count of the Type | 1 count |
 | 8 to 11 | `0F C0 00 00` | The Value Offset | 0FC0 = 4032 |
@@ -121,7 +121,7 @@ The first 12 bytes are broken down as follows:
 Bytes 8 to 11 don't actually point to an IFD value offset. Rather, the value of the image width is recorded here instead since it fits in 4 bytes or less. The value is the first 4 bytes starting from the left. `0F C0` means the width is 4032 and this is confirmed by looking back at the EXIF tool results: 
 
 
-![Exif](img-5.png)
+![Exif](/assets/img/Corrupted-Image/img-5.png)
 
 The 12 byte field entries contain the metadata we want to view. In this first directory entry we looked at the Exif.Image.ImageWidth data. Using an Exif tags table as a reference, we can look for the directory entry that has GPS Info.
 
@@ -130,7 +130,7 @@ The 12 byte field entries contain the metadata we want to view. In this first di
 The GPS info tag has the hex value of `8825` and can be searched for within the 13 12-byte entries. 
 
 
-![GPS-info-tag](GPS-Info-Tag.png)
+![GPS-info-tag](/assets/img/Corrupted-Image/GPS-Info-Tag.png)
 
 Looking back at the table above, the 13th directory entry contains an Exif Tag for GPS info. 
 
@@ -147,7 +147,7 @@ Looking back at the table above, the 13th directory entry contains an Exif Tag f
 Starting from the beginning of the TIFF File, the GPS IFD should start at offset 798 and what follows is a new IFD with its own number of 12-byte entries and values.
 
 
-![GPS-Info-IFD](GPS-Info-IFD.png)
+![GPS-Info-IFD](/assets/img/Corrupted-Image/GPS-Info-IFD.png)
 
 Following the same IFD structure of 2-byte number of entries and then x number of 12-byte entries, we can determine what this IFD has in it. 
 
@@ -167,7 +167,7 @@ Following the same IFD structure of 2-byte number of entries and then x number o
 |  | `00 1D 00 02 00 00 00 0B 00 00 03 EC` | Entry 8 |
 |  | `00 00 00 00 00` | Offset to Next IFD (None) |
 
-There are 9 directory entries in this GPS Info IFD. A [GPS Info Tag](https://exiftool.org/TagNames/GPS.html) reference can be used to identify the field tags. 
+There are 9 directory entries in this GPS Info IFD. A [GPS Info Tag](/assets/img/Corrupted-Image/https://exiftool.org/TagNames/GPS.html) reference can be used to identify the field tags. 
 
 
 | Entry # | Field Tag | Field Type | Count | Value |
@@ -198,12 +198,12 @@ The Final Coordinates are:
 `42° 58' 13.155" N`
 `85° 40' 13.7531" W`
 
-![Exif](img-6.png)
+![Exif](/assets/img/Corrupted-Image/img-6.png)
 
 
 **Ta-Da**
 
-![Ta-Da](Christoph-Waltz-Ta-Da-GIF.gif)
+![Ta-Da](/assets/img/Corrupted-Image/Christoph-Waltz-Ta-Da-GIF.gif)
 
 These coordinates are for this address:
 ```
@@ -214,7 +214,7 @@ United States of America
 
 
 The original, uncorrupted image: 
-![Original](Original_IMG.jpg)
+![Original](/assets/img/Corrupted-Image/Original_IMG.jpg)
 
 
 # References:

