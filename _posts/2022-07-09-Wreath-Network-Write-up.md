@@ -10,7 +10,7 @@ tags:
   - WriteUp
   - Wreath
 img_path: /assets/img/wreath-writeup/
-permalink: /posts/wreath-network-write-up/
+permalink: /posts/Wreath-Network-Write-Up/
 ---
 
 ![wreth-network](/assets/img/wreath-writeup/wreath-network.png)
