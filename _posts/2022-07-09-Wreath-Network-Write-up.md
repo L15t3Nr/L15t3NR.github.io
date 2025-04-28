@@ -10,7 +10,7 @@ img_path: /assets/img/wreath-writeup/
 ![wreth-network](/assets/img/wreath-writeup/wreath-network.png)
 
 
-The Wreath Network can be found [here](/assets/img/wreath-writeup/https://tryhackme.com/room/wreath)
+The Wreath Network can be found [here](https://tryhackme.com/room/wreath)
 
 # Executive Summary
 
@@ -43,7 +43,7 @@ commonName=thomaswreath.thm organizationName=Thomas
 10000/tcp open http syn-ack MiniServ 1.890 (Webmin httpd)
 ```
 There is a redirect attempt to
-[**https://thomaswreath.thm**](/assets/img/wreath-writeup/https://thomaswreath.thm), so, the
+[**https://thomaswreath.thm**](https://thomaswreath.thm), so, the
 hostname “**thomaswreath.thm**” was added to the **/etc/hosts** file to
 map the IP address to this hostname.
 
@@ -52,8 +52,8 @@ map the IP address to this hostname.
 Investigating known exploits for each of these services, it was
 discovered that **MiniServ 1.890** is vulnerable to a command injection
 vulnerability:
-[**CVE-2019-15107**](/assets/img/wreath-writeup/https://nvd.nist.gov/vuln/detail/cve-2019-15107)
-Exploit proof-of-concept code in python is found [here](/assets/img/wreath-writeup/<https://raw.githubusercontent.com/foxsin34/WebMin-1.890-Exploit-unauthorized-RCE/master/webmin-1.890_exploit.py>)
+[**CVE-2019-15107**](https://nvd.nist.gov/vuln/detail/cve-2019-15107)
+Exploit proof-of-concept code in python is found [here](https://raw.githubusercontent.com/foxsin34/WebMin-1.890-Exploit-unauthorized-RCE/master/webmin-1.890_exploit.py>)
 (Credits to **foxsin32** for sharing their PoC)
 
 ### Post-Exploitation
@@ -79,7 +79,7 @@ The private key provides access to the production server as **root** via
 SSH.
 
 
-![ssh](/assets/img/wreath-writeup//assets/img/wreath-writeup/ssh.png)
+![ssh](/assets/img/wreath-writeup/ssh.png)
 
 ### Post-Enumeration
 
@@ -152,8 +152,6 @@ proxied to and to not include the remote targets address with **–x.**
 
 We can now type in the .150 target IP address into the browser and visit
 the webpage.
-
-## 
 
 ## GitStack Server (.150)
 

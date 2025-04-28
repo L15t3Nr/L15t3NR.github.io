@@ -7,7 +7,7 @@ tag: [TryHackMe, WriteUp, Wonderland]
 img_path: /assets/img/Wonderland/
 ---
 
-Wonderland can be found [here](/assets/img/Wonderland/https://tryhackme.com/room/wonderland)
+Wonderland can be found [here](https://tryhackme.com/room/wonderland)
 
 ![Wonderland](/assets/img/Wonderland/Wonderland.jpeg)
 
@@ -130,11 +130,11 @@ User hatter contains a password file in the home directory that I will use to lo
 
 ![HatterSSH](/assets/img/Wonderland/HatterSSH.png)
 
-I ran through the [Privilege Escalation Checklist](/assets/img/Wonderland/https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md) and found that the hatter user has capabilities set on Perl. 
+I ran through the [Privilege Escalation Checklist](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md) and found that the hatter user has capabilities set on Perl. 
 
 ![GetCap](/assets/img/Wonderland/GetCap.png)
 
-There is a privilege escalation path found on [GTFO bins](/assets/img/Wonderland/https://gtfobins.github.io/gtfobins/perl/)
+There is a privilege escalation path found on [GTFO bins](https://gtfobins.github.io/gtfobins/perl/)
 
 The payload: 
 ```

@@ -26,7 +26,7 @@ You might try taking the jpg file and using an online EXIF tool to view the loca
 
 ![Exif Tool](/assets/img/Corrupted-Image/img-2.png)
 
-Unfortunately, this won't return any of the useful EXIF information. This has to do with the TIFF Header Structure of this corrupted image. TIFF stands for Tag Image File Format and its used to represent [raster graphics](/assets/img/Corrupted-Image/https://en.wikipedia.org/wiki/Raster_graphics)(2-D Images as a grid of pixels) and store image information (like location data or created date). 
+Unfortunately, this won't return any of the useful EXIF information. This has to do with the TIFF Header Structure of this corrupted image. TIFF stands for Tag Image File Format and its used to represent [raster graphics](https://en.wikipedia.org/wiki/Raster_graphics)(2-D Images as a grid of pixels) and store image information (like location data or created date). 
 
 ![HxD](/assets/img/Corrupted-Image/img-3.png)
 
@@ -112,7 +112,7 @@ The first 12 bytes are broken down as follows:
 | Bytes | Hex Value | Meaning | Information |
 | ---- | ---- | ---- | ---- |
 | 0 to 11 | `01 00 00 03 00 00 00 01 0F C0 00 00` | IFD Entry 0 | 12-Bytes |
-| 0 to 1 | `01 00` | Field Identifying Tag | 256 = [Exif.Image.ImageWidth](/assets/img/Corrupted-Image/https://exiftool.org/TagNames/EXIF.html) |
+| 0 to 1 | `01 00` | Field Identifying Tag | 256 = [Exif.Image.ImageWidth](https://exiftool.org/TagNames/EXIF.html) |
 | 2 to 3 | `00 03` | Field Type | SHORT (2 byte unsigned integer) |
 | 4 to 7 | `00 00 00 01` | Count of the Type | 1 count |
 | 8 to 11 | `0F C0 00 00` | The Value Offset | 0FC0 = 4032 |
@@ -167,7 +167,7 @@ Following the same IFD structure of 2-byte number of entries and then x number o
 |  | `00 1D 00 02 00 00 00 0B 00 00 03 EC` | Entry 8 |
 |  | `00 00 00 00 00` | Offset to Next IFD (None) |
 
-There are 9 directory entries in this GPS Info IFD. A [GPS Info Tag](/assets/img/Corrupted-Image/https://exiftool.org/TagNames/GPS.html) reference can be used to identify the field tags. 
+There are 9 directory entries in this GPS Info IFD. A [GPS Info Tag](https://exiftool.org/TagNames/GPS.html) reference can be used to identify the field tags. 
 
 
 | Entry # | Field Tag | Field Type | Count | Value |

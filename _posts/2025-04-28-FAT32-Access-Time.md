@@ -9,7 +9,7 @@ tags:
   - WriteUp
 img_path: /assets/img/FAT32-Access-Time
 ---
-# Sunday Funday # 814 - [David Cowen - HECFBlog](/assets/img/FAT32-Access-Time/https://www.hecfblog.com/2025/04/daily-blog-814-sunday-funday-42025.html)
+# Sunday Funday # 814 - [David Cowen - HECFBlog](https://www.hecfblog.com/2025/04/daily-blog-814-sunday-funday-42025.html)
 
 > [!Challenge]
 FAT32 does not store a time stamp for access dates, it only records the date. However many tools have or have in the past actually treated the zero time entry as a real time entry and adjusted it for time zones. Test your favorite tools such as , ftk imager, xways, axiom, encase, autopsy your choice but you must submit at least two and show if they are correctly handling FAT32 timestamps.
@@ -55,7 +55,7 @@ This is probably more than I need to do, but I enjoy digging in to documentation
 
 First I had to find the directory entry for the **test.txt** file to locate the timestamp information. 
 
-I'm using [`fsstat`](/assets/img/FAT32-Access-Time/https://www.sleuthkit.org/sleuthkit/man/fsstat.html) from [The Sleuth Kit](/assets/img/FAT32-Access-Time/https://www.sleuthkit.org/sleuthkit/) to get file system information from **test.img**.
+I'm using [`fsstat`](https://www.sleuthkit.org/sleuthkit/man/fsstat.html) from [The Sleuth Kit](https://www.sleuthkit.org/sleuthkit/) to get file system information from **test.img**.
 
 The `fsstat` output below shows some key information for locating the entry. 
 
@@ -67,7 +67,7 @@ The `fsstat` output below shows some key information for locating the entry.
 | Sector Size                 | 512 bytes                                  |
 | Root Directory Cluster      | 2                                          |
 | Root Directory Sector Range | 20512 - 20543                              |
-I've also used [`fls`](/assets/img/FAT32-Access-Time/https://www.sleuthkit.org/sleuthkit/man/fls.html) to list file and directory names in the disk image.
+I've also used [`fls`](https://www.sleuthkit.org/sleuthkit/man/fls.html) to list file and directory names in the disk image.
 ![](/assets/img/FAT32-Access-Time/Screenshot_2025-04-24_13-30-57.png)
 **test.txt** is the 4th directory entry.
 
@@ -85,7 +85,7 @@ The offset I need to check is `10502144`and the 4th directory entry appears to b
 
 ![](/assets/img/FAT32-Access-Time/Screenshot_2025-04-22_16-09-12.png)
 
-To make sense of the data I followed this [Directory Structure](/assets/img/FAT32-Access-Time/https://averstak.tripod.com/fatdox/dir.htm) documentation.
+To make sense of the data I followed this [Directory Structure](https://averstak.tripod.com/fatdox/dir.htm) documentation.
 
 Each Directory Entry Structure is 32 bytes long.
 
@@ -141,7 +141,7 @@ Now I know what FAT32 recorded for time and date and I can compare it to the too
 ---
 
 ## Tool Test 1 - istat (TheSleuthKit)
-The first tool I tested was [`istat`](/assets/img/FAT32-Access-Time/https://www.sleuthkit.org/sleuthkit/man/istat.html) from the [The Sleuth Kit](/assets/img/FAT32-Access-Time/https://www.sleuthkit.org/sleuthkit/).
+The first tool I tested was [`istat`](https://www.sleuthkit.org/sleuthkit/man/istat.html) from the [The Sleuth Kit](https://www.sleuthkit.org/sleuthkit/).
 
 ![](/assets/img/FAT32-Access-Time/Screenshot_2025-04-22_14-16-23.png)
 *You might notice the time is now 14:16:06 - I actually did this part before digging in to FAT32 manually.*
@@ -160,9 +160,9 @@ If it had adjusted for the time zone, i'd have expected to see the Accessed Time
 
 ---
 ## References
- [David Cowen - HECFBlog](/assets/img/FAT32-Access-Time/https://www.hecfblog.com/2025/04/daily-blog-814-sunday-funday-42025.html)
-[The Sleuth Kit](/assets/img/FAT32-Access-Time/https://www.sleuthkit.org/sleuthkit/)
-[`istat`](/assets/img/FAT32-Access-Time/https://www.sleuthkit.org/sleuthkit/man/istat.html)
-[Directory Structure](/assets/img/FAT32-Access-Time/https://averstak.tripod.com/fatdox/dir.htm)
-[`fls`](/assets/img/FAT32-Access-Time/https://www.sleuthkit.org/sleuthkit/man/fls.html)
+ [David Cowen - HECFBlog](https://www.hecfblog.com/2025/04/daily-blog-814-sunday-funday-42025.html)
+[The Sleuth Kit](https://www.sleuthkit.org/sleuthkit/)
+[`istat`](https://www.sleuthkit.org/sleuthkit/man/istat.html)
+[Directory Structure](https://averstak.tripod.com/fatdox/dir.htm)
+[`fls`](https://www.sleuthkit.org/sleuthkit/man/fls.html)
 
