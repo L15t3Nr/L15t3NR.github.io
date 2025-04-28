@@ -16,7 +16,7 @@ layout: post
 
 Wonderland can be found [here](https://tryhackme.com/room/wonderland)
 
-![Wonderland](/assets/img/Wonderland/Wonderland.jpeg)
+![Wonderland](Wonderland.jpeg)
 
 # Enumeration
 ## Nmap
@@ -42,7 +42,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ## Manual Inspection 
 The home page contains only an image
 
-![Home](/assets/img/Wonderland/Home.png)
+![Home](Home.png)
 
 ## Fuzzing for Directories
 Using Wfuzz, I enumerate directories
@@ -52,29 +52,29 @@ wfuzz -c -z file,/opt/SecLists/Discovery/Web-Content/raft-large-directories.txt 
 
 One of the first results comes back as the '/r/' directory.
 
-![r](/assets/img/Wonderland/r.png)
+![r](r.png)
 
 I had a feeling this was going to spell out the word 'rabbit', so I checked. 
 
-![rabbitPage](/assets/img/Wonderland/rabbitPage.png)
+![rabbitPage](rabbitPage.png)
 
 There is a page here and checking the source reveals something interesting. 
 
 There are credentials hidden in the page source. 
 
-![sourceCredentials](/assets/img/Wonderland/sourceCredentials.png)
+![sourceCredentials](sourceCredentials.png)
 
 # Lateral Movement
 ### Alice
 
 The credentials i found grant SSH access as the user 'alice'.
 
-![SSHAlice](/assets/img/Wonderland/SSHAlice.png)
+![SSHAlice](SSHAlice.png)
 
 Digging into the users permissions reveals the ability to execute a python script as the user 'rabbit'
 
 `sudo -l`
-![sudo-l](/assets/img/Wonderland/sudo-l.png)
+![sudo-l](sudo-l.png)
 
 
 ### Rabbit
@@ -97,49 +97,49 @@ Setting up a netcat listener on 4242 and then executing the script as the user r
 
 `sudo -u rabbit python3.6 ~/walrus_and_the_carpenter.py`
 
-![randomPY](/assets/img/Wonderland/randomPY.png)
+![randomPY](randomPY.png)
 
-![rabbitShell](/assets/img/Wonderland/rabbitShell.png)
+![rabbitShell](rabbitShell.png)
 
 ### Hatter
 
 The rabbit user contains a binary called 'teaParty' and their is a SUID set on the binary.
 
-![SUID](/assets/img/Wonderland/SUID2.png)
+![SUID](SUID2.png)
 
 I downloaded a strings static binary onto the target and inspected the strings in the binary.
 
-![teaParty](/assets/img/Wonderland/teaParty.png)
+![teaParty](teaParty.png)
 
 This revealed that the binary uses the 'date' command without an absolute path. This way I can hijack the command with my own by added a malicious 'date' binary to the tmp directory and including the tmp directory in the path. 
 
-![stringsResults](/assets/img/Wonderland/stringsResults.png)
+![stringsResults](stringsResults.png)
 
 the malicious date binary will contain a reverse shell payload and then be made executable
 
-![newDate](/assets/img/Wonderland/newDate.png)
+![newDate](newDate.png)
 
 The tmp directory is also added to the path
 
-![PATH](/assets/img/Wonderland/PATH.png)
+![PATH](PATH.png)
 
 A netcat listener is started on port 2345 and then the binary is executed for a reverse shell as the user Hatter
 
-![TeaPartyExec](/assets/img/Wonderland/TeaPartyExec.png)
+![TeaPartyExec](TeaPartyExec.png)
 
-![HatterShell](/assets/img/Wonderland/HatterShell.png)
+![HatterShell](HatterShell.png)
 
 # Privilege Escalation
 ### Root
 User hatter contains a password file in the home directory that I will use to login via SSH
 
-![HatterPassword](/assets/img/Wonderland/HatterPassword.png)
+![HatterPassword](HatterPassword.png)
 
-![HatterSSH](/assets/img/Wonderland/HatterSSH.png)
+![HatterSSH](HatterSSH.png)
 
 I ran through the [Privilege Escalation Checklist](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md) and found that the hatter user has capabilities set on Perl. 
 
-![GetCap](/assets/img/Wonderland/GetCap.png)
+![GetCap](GetCap.png)
 
 There is a privilege escalation path found on [GTFO bins](https://gtfobins.github.io/gtfobins/perl/)
 
@@ -148,4 +148,4 @@ The payload:
 perl -e 'use POSIX qw(setuid); POSIX::setuid(0); exec "/bin/sh";'
 ```
 
-![root](/assets/img/Wonderland/rootWonderland.png)
+![root](rootWonderland.png)
