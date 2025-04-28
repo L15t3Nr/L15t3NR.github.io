@@ -2,9 +2,15 @@
 title: Wonderland
 date: 2022-07-23 12:00:00 -0500
 author: L15t3Nr
-categories: [TryHackMe, WriteUp]
-tag: [TryHackMe, WriteUp, Wonderland]
+categories:
+  - TryHackMe
+  - WriteUp
+tags:
+  - TryHackMe
+  - WriteUp
+  - Wonderland
 img_path: /assets/img/Wonderland/
+permalink: /posts/Wonderland/
 ---
 
 Wonderland can be found [here](https://tryhackme.com/room/wonderland)

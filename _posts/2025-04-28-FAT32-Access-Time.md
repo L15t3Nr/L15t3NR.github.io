@@ -8,6 +8,7 @@ categories:
 tags:
   - WriteUp
 img_path: /assets/img/FAT32-Access-Time
+permalink: /posts/FAT32-Access-Time/
 ---
 # Sunday Funday # 814 - [David Cowen - HECFBlog](https://www.hecfblog.com/2025/04/daily-blog-814-sunday-funday-42025.html)
 

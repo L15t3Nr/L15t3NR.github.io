@@ -2,9 +2,15 @@
 title: Wreath Network
 date: 2022-07-09 12:00:00 -0500
 author: L15t3Nr
-categories: [TryHackMe, WriteUp]
-tag: [TryHackMe, WriteUp, Wreath]
+categories:
+  - TryHackMe
+  - WriteUp
+tags:
+  - TryHackMe
+  - WriteUp
+  - Wreath
 img_path: /assets/img/wreath-writeup/
+permalink: /posts/wreath-network-write-up/
 ---
 
 ![wreth-network](/assets/img/wreath-writeup/wreath-network.png)

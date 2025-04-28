@@ -8,6 +8,7 @@ categories:
 tags:
   - WriteUp
 img_path: /assets/img/Corrupted Image
+permalink: /posts/Corrupted-Image/
 ---
 ![img-1](/assets/img/Corrupted-Image/img-1.png)
 
