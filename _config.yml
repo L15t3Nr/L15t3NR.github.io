@@ -37,6 +37,10 @@ github:
 twitter:
   username: L15t3Nr            # change to your twitter username
 
+html_proofer:
+  checks_to_ignore:
+    - ImageCheck
+
 social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
