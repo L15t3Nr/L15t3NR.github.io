@@ -7,7 +7,7 @@ categories:
   - Digital Forensics
 tags:
   - WriteUp
-img_path: /assets/img/FAT32-Access-Time
+img_path: /assets/img/FAT32-Access-Time/
 permalink: /posts/FAT32-Access-Time/
 layout: post
 ---

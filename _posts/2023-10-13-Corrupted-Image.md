@@ -7,7 +7,7 @@ categories:
   - Digital Forensics
 tags:
   - WriteUp
-img_path: /assets/img/Corrupted Image
+img_path: /assets/img/Corrupted-Image/
 permalink: /posts/Corrupted-Image/
 layout: post
 ---
