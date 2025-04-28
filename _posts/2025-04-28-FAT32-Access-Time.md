@@ -69,6 +69,7 @@ The `fsstat` output below shows some key information for locating the entry.
 | Sector Size                 | 512 bytes                                  |
 | Root Directory Cluster      | 2                                          |
 | Root Directory Sector Range | 20512 - 20543                              |
+
 I've also used [`fls`](https://www.sleuthkit.org/sleuthkit/man/fls.html) to list file and directory names in the disk image.
 ![fls](Screenshot_2025-04-24_13-30-57.png)
 **test.txt** is the 4th directory entry.
@@ -106,6 +107,7 @@ The first 32 bytes is a **Long File Name Entry Structure**:
 | 0x0E   | 12 bytes | Name Part 2                 | 7400 7800 7400 0000 ffff ffff | txt - the file extension                       |
 | 0x1A   | 2 bytes  | First cluster               | 0000 ffff                     | 0                                              |
 | 0x1C   | 4 bytes  | Name Part 3                 | ffff                          | Padding                                        |
+
 Basically, this first 32 byte entry is for the filename. 
 
 The next 32 bytes is a **Standard 8.3 Directory Entry Structure**  (Time and Date):
@@ -127,6 +129,7 @@ The next 32 bytes is a **Standard 8.3 Directory Entry Structure**  (Time and Dat
 | 0x18   | 2 bytes  | Last Modified Date      | 965a->5a96<br>(Little Endian)  | 0101101->1980+45=2025<br>0100->4<br>10110->22<br>**4-22-2025** |
 | 0x1A   | 2 bytes  | Low 16 Bits of Cluster  | 0300                           | -                                                              |
 | 0x1C   | 4 bytes  | File Size               | 0500 0000                      | 1280 bytes                                                     |
+
 The time and date information is in this second entry and I was able to convert the bytes to dates and timestamps from the documentation. 
 
 | Field              | Value     |
@@ -136,6 +139,7 @@ The time and date information is in this second entry and I was able to convert 
 | Last Access Date   | 4-22-2025 |
 | Last Modified Time | 18:03:48  |
 | Last Modified Date | 4-22-2025 |
+
 FAT32 uses localtime for its timestamps, however, my system clock is set to UTC. So while my localtime is actually 14:03:48 EDT at the time I made the **test.txt** file, FAT32 used my system clock and the timestamps are UTC there.
 
 Now I know what FAT32 recorded for time and date and I can compare it to the tools that I'm going to test.

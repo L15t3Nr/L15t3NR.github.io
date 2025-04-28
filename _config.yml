@@ -123,7 +123,7 @@ pwa:
   enabled: true   # the option for PWA feature
 
 paginate: 10
-
+paginate_path: "/page:num/"
 # ------------ The following options are not recommended to be modified ------------------
 
 kramdown:
