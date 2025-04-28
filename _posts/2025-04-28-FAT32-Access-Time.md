@@ -28,16 +28,21 @@ I tried to make this post as detailed as I could. Mostly because a lot of it is 
 ## **Testing System (Arch Linux (btw)):** 
 
 **uname -a**
+
 ![uname](Screenshot_2025-04-22_13-57-15.png)
 
 **cat /etc/os-release**
+
 ![os-release](Screenshot_2025-04-22_13-57-59.png)
 
 **date**
+
 ![date](Screenshot_2025-04-22_13-55-33.png)
 
 I created a small partition on my host with **20G** of storage and set the type to **EFI System**: 
+
 ![disk](Screenshot_2025-04-22_13-59-40.png)
+
 20 gigs is a ton...and I regret this later...
 
 Next I formatted the partition with FAT32, mounted the partition to `/mnt/FAT32`, created a file (**test.txt**) with some "**DATA**", and then un-mounted the partition. 
@@ -73,7 +78,9 @@ The `fsstat` output below shows some key information for locating the entry.
 | Root Directory Sector Range | 20512 - 20543                              |
 
 I've also used [`fls`](https://www.sleuthkit.org/sleuthkit/man/fls.html) to list file and directory names in the disk image.
+
 ![fls](Screenshot_2025-04-24_13-30-57.png)
+
 **test.txt** is the 4th directory entry.
 
 This information can be used to find the offset for the **test.txt** directory entry and then the timestamps. 
@@ -95,6 +102,7 @@ To make sense of the data I followed this [Directory Structure](https://averstak
 Each Directory Entry Structure is 32 bytes long.
 
 The first 32 bytes is a **Long File Name Entry Structure**:
+
 ```
 4174 0065 0073 0074 002e 000f 008f 7400 7800 7400 0000 ffff ffff 0000 ffff ffff
 ```
@@ -113,6 +121,7 @@ The first 32 bytes is a **Long File Name Entry Structure**:
 Basically, this first 32 byte entry is for the filename. 
 
 The next 32 bytes is a **Standard 8.3 Directory Entry Structure**  (Time and Date):
+
 ```
 5445 5354 2020 2020 5458 5420 008b 7890 965a 965a 0000 7890 965a 0300 0500 0000
 ```
@@ -152,6 +161,7 @@ Now I know what FAT32 recorded for time and date and I can compare it to the too
 The first tool I tested was [`istat`](https://www.sleuthkit.org/sleuthkit/man/istat.html) from the [The Sleuth Kit](https://www.sleuthkit.org/sleuthkit/).
 
 ![istat](Screenshot_2025-04-22_14-16-23.png)
+
 *You might notice the time is now 14:16:06 - I actually did this part before digging in to FAT32 manually.*
 
 **The Sleuth Kit version is 4.13.0**
