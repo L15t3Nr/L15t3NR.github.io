@@ -26,25 +26,25 @@ I tried to make this post as detailed as I could. Mostly because a lot of it is 
 ## **Testing System (Arch Linux (btw)):** 
 
 **uname -a**
-![uname](/assets/img/FAT32-Access-Time/Screenshot_2025-04-22_13-57-15.png)
+![uname](Screenshot_2025-04-22_13-57-15.png)
 
 **cat /etc/os-release**
-![os-release](/assets/img/FAT32-Access-Time/Screenshot_2025-04-22_13-57-59.png)
+![os-release](Screenshot_2025-04-22_13-57-59.png)
 
 **date**
-![date](/assets/img/FAT32-Access-Time/Screenshot_2025-04-22_13-55-33.png)
+![date](Screenshot_2025-04-22_13-55-33.png)
 
 I created a small partition on my host with **20G** of storage and set the type to **EFI System**: 
-![disk](/assets/img/FAT32-Access-Time/Screenshot_2025-04-22_13-59-40.png)
+![disk](Screenshot_2025-04-22_13-59-40.png)
 20 gigs is a ton...and I regret this later...
 
 Next I formatted the partition with FAT32, mounted the partition to `/mnt/FAT32`, created a file (**test.txt**) with some "**DATA**", and then un-mounted the partition. 
 
-![actions](/assets/img/FAT32-Access-Time/Screenshot_2025-04-22_14-04-29.png)
+![actions](Screenshot_2025-04-22_14-04-29.png)
 
 Then I took a *logical* bit-by-bit copy of the partition using the **dd** command: 
 
-![imaging](/assets/img/FAT32-Access-Time/Screenshot_2025-04-22_14-08-54.png)
+![imaging](Screenshot_2025-04-22_14-08-54.png)
 
 The result is a **test.img** file containing the raw data from the FAT32 formatted partition. 
 
@@ -61,7 +61,7 @@ I'm using [`fsstat`](https://www.sleuthkit.org/sleuthkit/man/fsstat.html) from [
 
 The `fsstat` output below shows some key information for locating the entry. 
 
-![fsstat](/assets/img/FAT32-Access-Time/Screenshot_2025-04-22_16-11-02.png)
+![fsstat](Screenshot_2025-04-22_16-11-02.png)
 
 | Label                       | Value                                      |
 | --------------------------- | ------------------------------------------ |
@@ -70,7 +70,7 @@ The `fsstat` output below shows some key information for locating the entry.
 | Root Directory Cluster      | 2                                          |
 | Root Directory Sector Range | 20512 - 20543                              |
 I've also used [`fls`](https://www.sleuthkit.org/sleuthkit/man/fls.html) to list file and directory names in the disk image.
-![fls](/assets/img/FAT32-Access-Time/Screenshot_2025-04-24_13-30-57.png)
+![fls](Screenshot_2025-04-24_13-30-57.png)
 **test.txt** is the 4th directory entry.
 
 This information can be used to find the offset for the **test.txt** directory entry and then the timestamps. 
@@ -85,7 +85,7 @@ echo $((20512 * 512))
 
 The offset I need to check is `10502144`and the 4th directory entry appears to be at the top, which is my **test.txt** file. 
 
-![date-time](/assets/img/FAT32-Access-Time/Screenshot_2025-04-22_16-09-12.png)
+![date-time](Screenshot_2025-04-22_16-09-12.png)
 
 To make sense of the data I followed this [Directory Structure](https://averstak.tripod.com/fatdox/dir.htm) documentation.
 
@@ -145,7 +145,7 @@ Now I know what FAT32 recorded for time and date and I can compare it to the too
 ## Tool Test 1 - istat (TheSleuthKit)
 The first tool I tested was [`istat`](https://www.sleuthkit.org/sleuthkit/man/istat.html) from the [The Sleuth Kit](https://www.sleuthkit.org/sleuthkit/).
 
-![istat](/assets/img/FAT32-Access-Time/Screenshot_2025-04-22_14-16-23.png)
+![istat](Screenshot_2025-04-22_14-16-23.png)
 *You might notice the time is now 14:16:06 - I actually did this part before digging in to FAT32 manually.*
 
 **The Sleuth Kit version is 4.13.0**
@@ -154,7 +154,7 @@ I used the `fls` tool from The Sleuth Kit to get the test file's inode number. H
 
 Just below the `fls` output is the `istat` command output. `istat` uses the Directory Entry number (4) to check the 4th directory entry.
 
-![fls-istat](/assets/img/FAT32-Access-Time/Screenshot_2025-04-22_14-18-32.png)
+![fls-istat](Screenshot_2025-04-22_14-18-32.png)
 
 The output from `istat` appears to accurately interpret the Accessed zero time entry.
 
