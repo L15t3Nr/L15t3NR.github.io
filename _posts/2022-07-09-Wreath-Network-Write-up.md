@@ -11,6 +11,7 @@ tags:
   - Wreath
 img_path: /assets/img/wreath-writeup/
 permalink: /posts/Wreath-Network-Write-up/
+layout: post
 ---
 
 ![wreth-network](/assets/img/wreath-writeup/wreath-network.png)

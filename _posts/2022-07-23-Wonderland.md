@@ -11,6 +11,7 @@ tags:
   - Wonderland
 img_path: /assets/img/Wonderland/
 permalink: /posts/Wonderland/
+layout: post
 ---
 
 Wonderland can be found [here](https://tryhackme.com/room/wonderland)

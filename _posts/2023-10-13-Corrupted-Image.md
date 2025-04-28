@@ -9,6 +9,7 @@ tags:
   - WriteUp
 img_path: /assets/img/Corrupted Image
 permalink: /posts/Corrupted-Image/
+layout: post
 ---
 ![img-1](/assets/img/Corrupted-Image/img-1.png)
 
