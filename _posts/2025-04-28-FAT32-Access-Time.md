@@ -1,5 +1,5 @@
 ---
-title: "Sunday Funday # 814 - [David Cowen - HECFBlog](https://www.hecfblog.com/2025/04/daily-blog-814-sunday-funday-42025.html)"
+title: "Sunday Funday # 814 - FAT32 Access Time"
 date: 2025-04-28 12:00:00 -0500
 author: L15t3Nr
 categories:
