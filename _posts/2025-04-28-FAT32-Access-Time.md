@@ -14,6 +14,7 @@ layout: post
 # Sunday Funday # 814 - [David Cowen - HECFBlog](https://www.hecfblog.com/2025/04/daily-blog-814-sunday-funday-42025.html)
 
 > [!Challenge]
+
 FAT32 does not store a time stamp for access dates, it only records the date. However many tools have or have in the past actually treated the zero time entry as a real time entry and adjusted it for time zones. Test your favorite tools such as , ftk imager, xways, axiom, encase, autopsy your choice but you must submit at least two and show if they are correctly handling FAT32 timestamps.
 
 This is my first Sunday Funday submission! No expectations of winning a grand prize or anything but just wanting to throw my hat in the ring and explore FAT32. I'm also submitting late due to NCCDC and didn't get around to testing a second tool, so I wouldn't meet the requirements anyways. 
